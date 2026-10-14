@@ -2,6 +2,8 @@
 
 Use issues for reproducible problems and pull requests for changes. Include the exact board/module and versions, the first failing diagnostic layer and redacted evidence. Do not present an untested pin map or firmware build as hardware-verified.
 
+Before committing, install Gitleaks and enable the local hooks with `git config core.hooksPath .githooks`. See [SECURITY.md](SECURITY.md). The hooks inspect staged content and history; they intentionally fail if Gitleaks is unavailable.
+
 Run these checks from the repository root:
 
 ```sh
