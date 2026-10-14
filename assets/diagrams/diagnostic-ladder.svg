@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="870" viewBox="0 0 1200 870" role="img" aria-label="Diagnostic sequence for a ZAC93 ESPHome bridge">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="context-stroke"/></marker></defs>
+<rect width="1200" height="870" rx="22" fill="#f4f7fb"/>
+<text x="48" y="58" fill="#142c47" font-size="34" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Diagnose in order</text>
+<text x="48" y="96" fill="#142c47" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">An online ESP32 does not prove that the Z-Wave radio is communicating.</text>
+<rect x="48" y="137" width="1104" height="104" rx="16" fill="white" stroke="#d8e2ee" stroke-width="2"/>
+<circle cx="100" cy="189" r="28" fill="#b0343b"/>
+<text x="100" y="199" fill="white" font-size="28" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">1</text>
+<text x="150" y="174" fill="#b0343b" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">POWER</text>
+<text x="150" y="211" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">3.3 V at ZAC93; shared ground; no hot or loose connections.</text>
+<path d="M100,242 L100,265" stroke="#91a5b9" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="48" y="268" width="1104" height="104" rx="16" fill="white" stroke="#d8e2ee" stroke-width="2"/>
+<circle cx="100" cy="320" r="28" fill="#8b6300"/>
+<text x="100" y="330" fill="white" font-size="28" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">2</text>
+<text x="150" y="305" fill="#8b6300" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">NETWORK</text>
+<text x="150" y="342" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">DHCP address + TCP 6053 reachable from the driver host.</text>
+<path d="M100,373 L100,396" stroke="#91a5b9" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="48" y="399" width="1104" height="104" rx="16" fill="white" stroke="#d8e2ee" stroke-width="2"/>
+<circle cx="100" cy="451" r="28" fill="#007a89"/>
+<text x="100" y="461" fill="white" font-size="28" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">3</text>
+<text x="150" y="436" fill="#007a89" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">API</text>
+<text x="150" y="473" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Correct encrypted esphome:// URL; ESPHome logs available.</text>
+<path d="M100,504 L100,527" stroke="#91a5b9" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="48" y="530" width="1104" height="104" rx="16" fill="white" stroke="#d8e2ee" stroke-width="2"/>
+<circle cx="100" cy="582" r="28" fill="#235aab"/>
+<text x="100" y="592" fill="white" font-size="28" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">4</text>
+<text x="150" y="567" fill="#235aab" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">RADIO</text>
+<text x="150" y="604" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Z-Wave JS reports controller identity, firmware and Home ID.</text>
+<path d="M100,635 L100,658" stroke="#91a5b9" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="48" y="661" width="1104" height="104" rx="16" fill="white" stroke="#d8e2ee" stroke-width="2"/>
+<circle cx="100" cy="713" r="28" fill="#227348"/>
+<text x="100" y="723" fill="white" font-size="28" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">5</text>
+<text x="150" y="698" fill="#227348" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">DEVICE</text>
+<text x="150" y="735" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Inclusion completes; PIR events and battery reports arrive.</text>
+<text x="48" y="836" fill="#142c47" font-size="21" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Stop at the first failing layer. Do not reset or re-pair a network to fix a transport problem.</text>
+</svg>

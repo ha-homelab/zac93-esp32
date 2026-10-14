@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="550" viewBox="0 0 1200 550" role="img" aria-label="ZAC93 connector signal map">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="context-stroke"/></marker></defs>
+<rect width="1200" height="550" rx="22" fill="#f4f7fb"/>
+<text x="48" y="56" fill="#142c47" font-size="32" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">ZAC93 · identify signals before connecting</text>
+<text x="48" y="97" fill="#142c47" font-size="22" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Logical pin map based on the Raspberry Pi 1–10 header numbering</text>
+<text x="48" y="129" fill="#142c47" font-size="18" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">This grid is not a mating-side view. Use the board silkscreen and the reference photographs.</text>
+<rect x="48" y="175" width="205" height="110" rx="16" fill="#fff0c1" stroke="#d8e2ee" stroke-width="2"/>
+<text x="66" y="213" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">1</text>
+<text x="66" y="253" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">3V3</text>
+<rect x="273" y="175" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="291" y="213" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">3</text>
+<text x="291" y="253" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">SDA / unused</text>
+<rect x="498" y="175" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="516" y="213" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">5</text>
+<text x="516" y="253" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">SCL / unused</text>
+<rect x="723" y="175" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="741" y="213" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">7</text>
+<text x="741" y="253" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">RESET / unused</text>
+<rect x="948" y="175" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="966" y="213" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">9</text>
+<text x="966" y="253" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">GND</text>
+<rect x="48" y="310" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="66" y="348" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">2</text>
+<text x="66" y="388" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">NC</text>
+<rect x="273" y="310" width="205" height="110" rx="16" fill="#e7edf4" stroke="#d8e2ee" stroke-width="2"/>
+<text x="291" y="348" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">4</text>
+<text x="291" y="388" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">NC</text>
+<rect x="498" y="310" width="205" height="110" rx="16" fill="#fff0c1" stroke="#d8e2ee" stroke-width="2"/>
+<text x="516" y="348" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">6</text>
+<text x="516" y="388" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">GND</text>
+<rect x="723" y="310" width="205" height="110" rx="16" fill="#fff0c1" stroke="#d8e2ee" stroke-width="2"/>
+<text x="741" y="348" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">8</text>
+<text x="741" y="388" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">RX to ZAC93</text>
+<rect x="948" y="310" width="205" height="110" rx="16" fill="#fff0c1" stroke="#d8e2ee" stroke-width="2"/>
+<text x="966" y="348" fill="#142c47" font-size="30" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">10</text>
+<text x="966" y="388" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">TX from ZAC93</text>
+<text x="48" y="471" fill="#142c47" font-size="20" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Our four wires use pins 1, 6, 8 and 10. Pin 9 is another ground; leave it unused.</text>
+<text x="48" y="509" fill="#142c47" font-size="19" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Hardware v2 connects pin 7 to reset. This project does not drive pin 7.</text>
+</svg>

@@ -1,0 +1,15 @@
+# ESP32-DevKitC / DevKit with an ESP32-WROOM-32/32D/32E module.
+# Not ESP32-WROVER: GPIO16/17 may be reserved for PSRAM on WROVER.
+substitutions:
+  node_name: zac93-wroom
+  friendly_name: ZAC93 WROOM
+  zwave_tx_pin: GPIO17  # ESP32 TX -> ZAC93 pin 8 (RX)
+  zwave_rx_pin: GPIO16  # ESP32 RX <- ZAC93 pin 10 (TX)
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+packages:
+  common: !include common.yaml

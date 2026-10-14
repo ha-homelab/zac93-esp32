@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.esphome/
+.pioenvs/
+.piolibdeps/
+firmware/secrets.yaml
+*.bin
+*.elf
+*.uf2
+*.gbl
+*.nvm
+*.nvm3
+*.log
+.env
+.DS_Store
+local/

@@ -1,0 +1,17 @@
+# Reference: ESP32-S3-DevKitC-1 with an N8 module (8 MB flash).
+# For N16R8 set flash_size to 16MB after verifying the actual module marking.
+# PSRAM is not needed for this bridge and is deliberately not enabled.
+substitutions:
+  node_name: zac93-s3
+  friendly_name: ZAC93 S3
+  zwave_tx_pin: GPIO17  # ESP32-S3 TX -> ZAC93 pin 8 (RX)
+  zwave_rx_pin: GPIO18  # ESP32-S3 RX <- ZAC93 pin 10 (TX)
+
+esp32:
+  board: esp32-s3-devkitc-1
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+
+packages:
+  common: !include common.yaml

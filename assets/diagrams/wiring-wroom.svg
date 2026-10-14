@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="710" viewBox="0 0 1200 710" role="img" aria-label="ESP32-WROOM-32 / DevKit to Zooz ZAC93 wiring">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="context-stroke"/></marker></defs>
+<rect width="1200" height="710" rx="22" fill="#f4f7fb"/>
+<text x="48" y="56" fill="#142c47" font-size="34" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">ESP32-WROOM-32 / DevKit + ZAC93</text>
+<text x="48" y="94" fill="#142c47" font-size="23" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Four wires • 3.3 V logic • UART 115200 / 8N1</text>
+<rect x="48" y="130" width="325" height="410" rx="16" fill="#173d63" stroke="#173d63" stroke-width="2"/>
+<rect x="785" y="130" width="367" height="410" rx="16" fill="#fff5d9" stroke="#dfbf69" stroke-width="2"/>
+<text x="75" y="174" fill="white" font-size="26" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">ESP32 board</text>
+<text x="812" y="174" fill="#142c47" font-size="26" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">ZAC93 module</text>
+<text x="75" y="238" fill="white" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">3V3</text>
+<text x="812" y="238" fill="#142c47" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Pin 1 · 3V3</text>
+<text x="578" y="217" fill="#c74042" font-size="16" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">POWER</text>
+<path d="M380,230 L780,230" stroke="#c74042" stroke-width="5" fill="none"/>
+<circle cx="373" cy="230" r="7" fill="#c74042" stroke="white" stroke-width="2"/>
+<circle cx="785" cy="230" r="7" fill="#c74042" stroke="white" stroke-width="2"/>
+<text x="75" y="315" fill="white" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">GND</text>
+<text x="812" y="315" fill="#142c47" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Pin 6 · GND</text>
+<text x="578" y="294" fill="#34404c" font-size="16" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">COMMON GROUND</text>
+<path d="M380,307 L780,307" stroke="#34404c" stroke-width="5" fill="none"/>
+<circle cx="373" cy="307" r="7" fill="#34404c" stroke="white" stroke-width="2"/>
+<circle cx="785" cy="307" r="7" fill="#34404c" stroke="white" stroke-width="2"/>
+<text x="75" y="392" fill="white" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">GPIO17 · TX</text>
+<text x="812" y="392" fill="#142c47" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Pin 8 · RX</text>
+<text x="578" y="371" fill="#a66b00" font-size="16" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">ESP32 → ZAC93</text>
+<path d="M380,384 L780,384" stroke="#a66b00" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+<circle cx="373" cy="384" r="7" fill="#a66b00" stroke="white" stroke-width="2"/>
+<circle cx="785" cy="384" r="7" fill="#a66b00" stroke="white" stroke-width="2"/>
+<text x="75" y="469" fill="white" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">GPIO16 · RX</text>
+<text x="812" y="469" fill="#142c47" font-size="24" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Pin 10 · TX</text>
+<text x="578" y="448" fill="#087d89" font-size="16" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="middle">ZAC93 → ESP32</text>
+<path d="M780,461 L380,461" stroke="#087d89" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+<circle cx="373" cy="461" r="7" fill="#087d89" stroke="white" stroke-width="2"/>
+<circle cx="785" cy="461" r="7" fill="#087d89" stroke="white" stroke-width="2"/>
+<text x="75" y="515" fill="#cfdeed" font-size="18" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">USB powers this board</text>
+<text x="812" y="515" fill="#142c47" font-size="18" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Leave all other pins open</text>
+<rect x="48" y="566" width="1104" height="104" rx="16" fill="#e5edf6" stroke="#d8e2ee" stroke-width="2"/>
+<text x="70" y="601" fill="#142c47" font-size="23" font-family="Arial,Helvetica,sans-serif" font-weight="bold" text-anchor="start">Disconnect USB before wiring. Never connect 5 V to ZAC93.</text>
+<text x="70" y="635" fill="#142c47" font-size="18" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">WROOM only: GPIO16/17 may be reserved on WROVER modules.</text>
+<text x="48" y="693" fill="#142c47" font-size="16" font-family="Arial,Helvetica,sans-serif" font-weight="normal" text-anchor="start">Electrical diagram, not a scale drawing. Match signals and pin numbers, not board orientation.</text>
+</svg>
