@@ -1,0 +1,16 @@
+title = "ZAC93 public repository secret detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "esphome-api-encryption-key"
+description = "Literal ESPHome 32-byte API encryption key"
+regex = '''(?i)(?:api_encryption_key|\bkey)\s*:\s*["']?([A-Za-z0-9+/]{43}=)'''
+secretGroup = 1
+
+[[rules]]
+id = "esphome-private-connection-url"
+description = "ESPHome connection URL containing a literal API key"
+regex = '''(?i)esphome://[^\s"'<>`]+[?&]key=([a-z0-9+/%]{42,}(?:=|%3d))'''
+secretGroup = 1
