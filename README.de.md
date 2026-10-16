@@ -43,10 +43,9 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 cp firmware/secrets.example.yaml firmware/secrets.yaml
 openssl rand -base64 32
-openssl rand -hex 24
 ```
 
-In `firmware/secrets.yaml` das lokale 2,4-GHz-WLAN, den erzeugten Base64-Wert als `api_encryption_key` und das zweite Zufallspasswort als `ota_password` eintragen. Diese Datei und kompilierte Firmware nicht veröffentlichen. API-Schlüssel, OTA-Passwort und Z-Wave-Netzwerkschlüssel sind unterschiedliche Geheimnisse.
+In `firmware/secrets.yaml` das lokale 2,4-GHz-WLAN, den erzeugten Base64-Wert als `api_encryption_key` für API und verschlüsselte OTA-Updates eintragen. Diese Datei und kompilierte Firmware nicht veröffentlichen. API und OTA verwenden denselben Geräteschlüssel; Z-Wave-Netzwerkschlüssel bleiben getrennt. OTA benötigt den festgelegten ESPHome-Client; unverschlüsselte Uploads werden abgewiesen.
 
 Für WROOM prüfen, bauen und den tatsächlichen seriellen Port ermitteln:
 

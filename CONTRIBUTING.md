@@ -22,3 +22,16 @@ python3 scripts/validate_configs.py --compile
 ```
 
 Pin-map changes need the relevant board schematic or a clearly identified physical test. Keep the English wiring/setup pages, Russian guide, YAML and diagram generator consistent. Add new photographs only if you have permission to publish them; cite external reference material and explain differences. Recheck links and commands when updating software versions.
+
+
+Every major functionality change must include automated tests and relevant
+negative cases. Firmware/configuration changes require successful full builds
+of both supported boards with disposable credentials; this proves compilation,
+not physical commissioning. Python changes must pass Ruff E4/E7/E9/F checks.
+The maintainer reviews test evidence and substantive findings before a normal
+pull-request merge. Do not disable checks to obtain a green result.
+
+
+## Project participation
+
+Use public GitHub issues and pull requests for questions, proposals and reproducible non-sensitive bugs. English is the shared discussion language. Read [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md) and the [roadmap](ROADMAP.md). All major functionality changes require automated regression coverage, including relevant negative cases, and updated interface documentation. Resolve review findings and required CI failures before normal merge. Original contributions are accepted under the repository MIT license; preserve third-party licensing and attribution.

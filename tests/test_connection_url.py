@@ -1,7 +1,10 @@
 import base64
 import importlib.util
+import contextlib
+import io
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 from urllib.parse import parse_qs, urlparse
 
 spec = importlib.util.spec_from_file_location('connection_url', Path(__file__).resolve().parents[1] / 'scripts/connection_url.py')
@@ -21,6 +24,19 @@ class ConnectionURLTest(unittest.TestCase):
     def test_ipv6(self):
         url = module.connection_url('2001:db8::1', base64.b64encode(bytes(32)).decode())
         self.assertEqual(urlparse(url).hostname, '2001:db8::1')
+
+    def test_cli_displays_only_the_explicitly_requested_private_url(self):
+        key = base64.b64encode(bytes(range(32))).decode()
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(module.getpass, 'getpass', return_value=key), \
+                patch('sys.argv', ['connection_url.py', 'example.invalid']), \
+                contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            module.main()
+        lines = stdout.getvalue().splitlines()
+        self.assertEqual(len(lines), 2)
+        self.assertIn('Private connection URL', lines[0])
+        self.assertEqual(lines[1], module.connection_url('example.invalid', key))
+        self.assertEqual(stderr.getvalue(), '')
 
     def test_reject_bad_key_host_and_port(self):
         valid = base64.b64encode(bytes(32)).decode()

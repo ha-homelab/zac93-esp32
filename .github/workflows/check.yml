@@ -36,7 +36,7 @@ jobs:
         run: '"$RUNNER_TEMP/gitleaks" git --log-opts="--all --full-history" --redact=100 --ignore-gitleaks-allow --no-banner'
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
@@ -48,13 +48,14 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-      - name: Install pinned ESPHome
-        run: python -m pip install -r requirements.txt
+      - name: Install pinned ESPHome and Python analysis
+        run: python -m pip install -r requirements.txt ruff==0.14.0
       - name: Check URL handling and documentation
         run: |
+          python -m ruff check --select E4,E7,E9,F scripts tests
           python -m unittest discover -s tests -v
           python scripts/check_docs.py
           python scripts/render_diagrams.py
           git diff --exit-code -- assets/diagrams
-      - name: Validate both boards with disposable credentials
-        run: python scripts/validate_configs.py
+      - name: Build both boards with disposable credentials
+        run: python scripts/validate_configs.py --compile
