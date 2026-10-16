@@ -7,8 +7,13 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
-documents = [ROOT / 'README.md', ROOT / 'CONTRIBUTING.md', ROOT / 'SECURITY.md']
+documents = sorted(ROOT.glob('README*.md')) + [ROOT / 'CONTRIBUTING.md', ROOT / 'SECURITY.md']
 documents.extend(sorted((ROOT / 'docs').glob('*.md')))
+documents.extend(sorted((ROOT / 'wiki').glob('*.md')))
+for required in ('README.md', 'README.ru.md', 'README.de.md', 'README.es.md',
+                 'wiki/Home.md', 'wiki/Home-ru.md', 'wiki/_Sidebar.md'):
+    if not (ROOT / required).is_file():
+        errors.append(f'Missing documentation entry point: {required}')
 for document in documents:
     text = document.read_text()
     for target in re.findall(r'\]\(([^\s)]+)\)', text):
