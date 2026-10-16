@@ -1,5 +1,7 @@
 # ZAC93 + ESP32 → Home Assistant
 
+[English](README.md) · [Русский](README.ru.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Wiki source](wiki/Home.md)
+
 An illustrated build guide for a local Z-Wave controller using a **Zooz ZAC93**, an **ESP32-WROOM or ESP32-S3**, ESPHome's native Z-Wave proxy, and Z-Wave JS.
 
 **Build status:** hardware ordered; physical commissioning is pending. This repository provides wiring references, firmware configurations and a commissioning procedure. See the [validation record](docs/validation.md) for what has actually been tested.
@@ -49,3 +51,7 @@ Z-Wave JS documents the native [`esphome://` transport](https://github.com/zwave
 Reference photos and screenshots are clearly attributed external embeds, not photographs or screenshots of a completed build in this repository. [Sources and image credits](docs/sources.md) identify their origin and any differences from this design. Our code, prose and SVG diagrams use the [MIT license](LICENSE); third-party material retains its original rights.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to reproduce checks or report a board variant. Remove API keys, Wi-Fi credentials, Z-Wave security keys, DSKs and private network details before sharing diagnostics.
+
+## Related offline tools
+
+After defining the installation, [these four community tools](docs/community-tools.md) can help review entity migrations, measurement meaning, synthetic HA scenarios and recorded voice evidence. They do not commission the ZAC93 or prove radio coverage. Physical acceptance remains the [commissioning checklist](docs/commissioning.md).
