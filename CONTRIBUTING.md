@@ -30,3 +30,8 @@ of both supported boards with disposable credentials; this proves compilation,
 not physical commissioning. Python changes must pass Ruff E4/E7/E9/F checks.
 The maintainer reviews test evidence and substantive findings before a normal
 pull-request merge. Do not disable checks to obtain a green result.
+
+
+## Project participation
+
+Use public GitHub issues and pull requests for questions, proposals and reproducible non-sensitive bugs. English is the shared discussion language. Read [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md) and the [roadmap](ROADMAP.md). All major functionality changes require automated regression coverage, including relevant negative cases, and updated interface documentation. Resolve review findings and required CI failures before normal merge. Original contributions are accepted under the repository MIT license; preserve third-party licensing and attribution.

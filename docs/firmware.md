@@ -16,12 +16,11 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 cp firmware/secrets.example.yaml firmware/secrets.yaml
 openssl rand -base64 32
-openssl rand -hex 24
 ```
 
-Edit `firmware/secrets.yaml` locally. Put your 2.4 GHz Wi-Fi name/password in the first two fields, the generated Base64 value in `api_encryption_key`, and the random hex value in `ota_password`. Quote values in YAML. Use your editor's normal escaping if a password contains quote characters.
+Edit `firmware/secrets.yaml` locally. Put your 2.4 GHz Wi-Fi name/password in the first two fields, the generated Base64 value in `api_encryption_key`, which also authenticates encrypted OTA. Quote values in YAML. Use your editor's normal escaping if a password contains quote characters.
 
-Keep `secrets.yaml` private. The API key, OTA password and Z-Wave network security keys are **three different kinds of secret**. Firmware binaries contain configuration secrets and should not be uploaded to issues or public releases either.
+Keep `secrets.yaml` private. The API/OTA device key and Z-Wave network security keys are **separate kinds of secret**. Firmware binaries contain configuration secrets and should not be uploaded to issues or public releases either.
 
 For an ESPHome Device Builder installation, copy `common.yaml`, the chosen board YAML and your private `secrets.yaml` into its configuration directory. Preserve the relative include, then validate and install the chosen board entry. Do not try to install `common.yaml` on its own.
 
@@ -71,7 +70,7 @@ After Wi-Fi comes up, stop the log viewer with Ctrl-C. Disconnect USB, attach th
 - `api.reboot_timeout: 0s`: prevents a reboot solely because no API client is connected during setup. This does not disable every other watchdog or Wi-Fi recovery mechanism.
 - `logger.baud_rate: 0`: disables serial log output. View application logs over the API. Boot ROM output can still exist on programming interfaces.
 - `wifi.power_save_mode: none`: avoids Wi-Fi power-saving latency at the cost of extra power use.
-- `ota`: separate password-protected ESPHome updates. Do not equate an OTA password with encrypted transport.
+- `ota.encryption: {}`: requires encrypted Noise OTA with the same 32-byte PSK as the API. Plaintext/password-only uploaders are rejected; use the pinned ESPHome CLI. An OTA password is neither needed nor accepted in this profile.
 
 See the official [UART](https://esphome.io/components/uart/), [API](https://esphome.io/components/api/), [Z-Wave proxy](https://esphome.io/components/zwave_proxy/) and [OTA](https://esphome.io/components/ota/esphome/) documentation.
 
@@ -85,3 +84,15 @@ esphome run firmware/esp32-wroom.yaml --device zac93-wroom.local
 For S3, use `esp32-s3.yaml` and `zac93-s3.local`. A DHCP-reserved IP works if mDNS does not. The `run` command installs firmware and interrupts the bridge; plan updates when temporary loss of Z-Wave control is acceptable. Save the working configuration and Z-Wave backups first. Stop Z-Wave JS for a planned bridge update and restart it afterward.
 
 Normal diagnostic API clients can coexist with the proxy connection, but **only one Z-Wave driver may own the radio stream**. Do not connect two Z-Wave JS instances while troubleshooting.
+
+## Migrating from password-only OTA
+
+This source revision changes OTA policy: `encryption: {}` reuses the API PSK,
+requires encrypted transport, and removes the separate OTA-password verifier.
+Keep the device's existing API key during this transition and use the pinned
+ESPHome CLI. If the installed older firmware cannot negotiate encrypted OTA,
+perform this update by USB instead; do not disable the new policy to force a
+network upload. Afterward, clients without encryption support cannot update it.
+Key rotation changes access to both API and OTA, so keep a private recovery copy
+of the current key until the replacement firmware is accepted. USB recovery
+remains available. CI compiles this policy but does not establish a live upgrade.

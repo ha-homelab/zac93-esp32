@@ -21,7 +21,8 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    # Reuse the API Noise PSK and reject unencrypted uploaders.
+    encryption: {}
 
 uart:
   id: zwave_uart

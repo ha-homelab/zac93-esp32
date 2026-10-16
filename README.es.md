@@ -43,10 +43,9 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 cp firmware/secrets.example.yaml firmware/secrets.yaml
 openssl rand -base64 32
-openssl rand -hex 24
 ```
 
-Editar `firmware/secrets.yaml` con los datos de la red Wi-Fi de 2,4 GHz, el valor Base64 generado en `api_encryption_key` y la segunda contraseña aleatoria en `ota_password`. No publicar este archivo ni los binarios compilados. La clave API, la contraseña OTA y las claves de seguridad de la red Z-Wave cumplen funciones distintas.
+Editar `firmware/secrets.yaml` con los datos de la red Wi-Fi de 2,4 GHz, el valor Base64 generado en `api_encryption_key` para la API y las actualizaciones OTA cifradas. No publicar este archivo ni los binarios compilados. La API y OTA usan la misma clave del dispositivo; las claves Z-Wave siguen separadas. Usar el cliente ESPHome fijado: se rechazan las cargas sin cifrar.
 
 Para WROOM, validar, compilar e identificar el puerto real:
 

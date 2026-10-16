@@ -55,10 +55,9 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 cp firmware/secrets.example.yaml firmware/secrets.yaml
 openssl rand -base64 32
-openssl rand -hex 24
 ```
 
-В `firmware/secrets.yaml` записать SSID/пароль Wi-Fi 2,4 ГГц, сгенерированный Base64-ключ в `api_encryption_key` и второй случайный пароль в `ota_password`. Этот файл, собранные бинарники и ключи не публиковать.
+В `firmware/secrets.yaml` записать SSID/пароль Wi-Fi 2,4 ГГц, сгенерированный Base64-ключ в `api_encryption_key`; этот же ключ аутентифицирует шифрованные OTA-обновления. Отдельный пароль OTA не нужен. Этот файл, собранные бинарники и ключи не публиковать.
 
 Проверка и сборка WROOM:
 

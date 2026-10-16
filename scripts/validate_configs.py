@@ -22,12 +22,37 @@ def main() -> int:
             shutil.copyfile(root / 'firmware' / name, work / name)
         key = base64.b64encode(secrets.token_bytes(32)).decode()
         password = secrets.token_hex(24)
+        (work / 'secrets.yaml').touch(mode=0o600)
         (work / 'secrets.yaml').write_text(
             'wifi_ssid: "TEST_ONLY_NOT_A_REAL_NETWORK"\n'
             f'wifi_password: "{password}"\n'
             f'api_encryption_key: "{key}"\n'
-            f'ota_password: "{password}"\n'
         )
+        # Exercise the pinned ESPHome validator, not a local imitation of its schema.
+        secrets_path = work / 'secrets.yaml'
+        original_secrets = secrets_path.read_text()
+        common_path = work / 'common.yaml'
+        original_common = common_path.read_text()
+        invalid_key = base64.b64encode(secrets.token_bytes(31)).decode()
+        for case in ('short-key', 'password-with-encryption'):
+            if case == 'short-key':
+                secrets_path.write_text(original_secrets.replace(key, invalid_key))
+            else:
+                common_path.write_text(original_common.replace(
+                    '    encryption: {}', '    encryption: {}\n    password: !secret wifi_password'))
+            result = subprocess.run(
+                [sys.executable, '-m', 'esphome', 'config', str(work / 'esp32-wroom.yaml')],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, check=False,
+            )
+            # These assertions distinguish an intended schema rejection from e.g.
+            # a missing dependency; never print the validation output or test keys.
+            expected = '32' if case == 'short-key' else 'cannot be combined'
+            if result.returncode == 0 or expected not in result.stdout:
+                print(f'FAIL: expected schema rejection for {case}', flush=True)
+                return 1
+            print(f'PASS: schema rejects {case}', flush=True)
+            secrets_path.write_text(original_secrets)
+            common_path.write_text(original_common)
         for name in ('esp32-wroom.yaml', 'esp32-s3.yaml'):
             for operation in operations:
                 print(f'{name}: {operation}', flush=True)

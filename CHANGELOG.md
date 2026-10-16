@@ -6,6 +6,8 @@ firmware or claim hardware validation.
 
 ## Development changes
 
+- Require encrypted OTA using the API device PSK and reject password-only uploaders. Keep the existing key for migration; use the pinned CLI or USB recovery.
+
 - Continuously compile both WROOM and S3 firmware configurations using disposable
   credentials, in addition to configuration validation and documentation tests.
 - Check Python scripts and tests with Ruff error rules.
