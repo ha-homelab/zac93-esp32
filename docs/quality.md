@@ -7,3 +7,5 @@ Failures and substantive review findings must be resolved before merge. Automate
 The primary maintainer personally confirmed knowledge of secure-design principles and common Python/network vulnerabilities. The maintainer also confirms no bug, enhancement or vulnerability reports outside GitHub in the preceding 12 months. These are human attestations, not test results; public issue history and current security findings must also be checked when refreshing the assessment.
 
 See [governance](../GOVERNANCE.md), [conduct](../CODE_OF_CONDUCT.md), [roadmap](../ROADMAP.md) and [security policy](../SECURITY.md).
+
+The [compiler dependency assessment](compiler-dependency-assessment.md) records known Starlette advisories in the pinned build environment. Its conclusion applies to Python 3.12 command-line config/compile/serial-upload usage, not PlatformIO Home or ESPHome dashboard.
