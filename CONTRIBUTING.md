@@ -22,3 +22,11 @@ python3 scripts/validate_configs.py --compile
 ```
 
 Pin-map changes need the relevant board schematic or a clearly identified physical test. Keep the English wiring/setup pages, Russian guide, YAML and diagram generator consistent. Add new photographs only if you have permission to publish them; cite external reference material and explain differences. Recheck links and commands when updating software versions.
+
+
+Every major functionality change must include automated tests and relevant
+negative cases. Firmware/configuration changes require successful full builds
+of both supported boards with disposable credentials; this proves compilation,
+not physical commissioning. Python changes must pass Ruff E4/E7/E9/F checks.
+The maintainer reviews test evidence and substantive findings before a normal
+pull-request merge. Do not disable checks to obtain a green result.

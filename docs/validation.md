@@ -14,7 +14,7 @@ Both supplied board configurations passed `esphome config` and a full compilatio
 - The 26 distinct external documentation/image URLs present at the time of inspection returned HTTP 200. This is an availability check, not a guarantee about future pages or every URL fragment.
 - Local Markdown target checks and SVG XML parsing passed. The GitHub Actions workflow passed `actionlint`.
 
-Flash/RAM figures describe these builds, not measured runtime consumption or an electrical power budget. Different credentials, compiler releases or configuration changes may change them. CI validates configurations and documentation; it does not perform a hardware test or publish firmware containing credentials.
+Flash/RAM figures describe these builds, not measured runtime consumption or an electrical power budget. Different credentials, compiler releases or configuration changes may change them. The current CI workflow validates configurations, runs Python analysis/tests and fully compiles both boards with disposable credentials. Its exact run must pass before merge. CI does not perform a hardware test or publish firmware containing credentials.
 
 ## Source fingerprints
 
