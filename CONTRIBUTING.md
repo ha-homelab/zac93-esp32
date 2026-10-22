@@ -21,7 +21,7 @@ python3 scripts/validate_configs.py
 python3 scripts/validate_configs.py --compile
 ```
 
-Pin-map changes need the relevant board schematic or a clearly identified physical test. Keep the English wiring/setup pages, Russian guide, YAML and diagram generator consistent. Add new photographs only if you have permission to publish them; cite external reference material and explain differences. Recheck links and commands when updating software versions.
+Pin-map changes need the relevant board schematic or a clearly identified physical test. Keep the wiring/setup pages, Russian reference guide, all 24 language editions of the wiki guides, YAML and diagram generator consistent. Follow the [wiki translation maintenance guide](docs/wiki-translations.md) when updating the wiki; the detailed hardware references retain their existing language scope. Add new photographs only if you have permission to publish them; cite external reference material and explain differences. Recheck links and commands when updating software versions.
 
 
 Every major functionality change must include automated tests and relevant
