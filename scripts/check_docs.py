@@ -18,13 +18,13 @@ for required in ('README.md', 'README.ru.md', 'README.de.md', 'README.es.md',
 
 # These three wiki families are complete translations, not short language stubs.
 # Check navigation and source references as part of the existing offline CI check.
-languages = json.loads((ROOT / 'wiki' / 'languages.json').read_text())
+languages = json.loads((ROOT / 'wiki' / 'languages.json').read_text(encoding="utf-8"))
 codes = [language['code'] for language in languages]
 if len(codes) != 24 or len(set(codes)) != 24:
     errors.append('wiki/languages.json must contain 24 distinct languages')
 for family, steps, bullets in (('Connection', 4, 0), ('Home', 0, 8),
                                ('Troubleshooting', 5, 0)):
-    source = (ROOT / 'wiki' / f'{family}.md').read_text()
+    source = (ROOT / 'wiki' / f'{family}.md').read_text(encoding="utf-8")
     references = {url for url in re.findall(r'\]\(([^\s)]+)\)', source)
                   if url.startswith('https:')}
     for language in languages:
@@ -34,7 +34,7 @@ for family, steps, bullets in (('Connection', 4, 0), ('Home', 0, 8),
         if not page.is_file():
             errors.append(f'Missing complete wiki translation: {page.name}')
             continue
-        text = page.read_text()
+        text = page.read_text(encoding="utf-8")
         navigation = re.search(r'<!-- language-navigation:start -->(.*?)'
                                r'<!-- language-navigation:end -->', text, re.S)
         if not navigation:
@@ -57,7 +57,7 @@ for family, steps, bullets in (('Connection', 4, 0), ('Home', 0, 8),
         if not references <= targets:
             errors.append(f'{page.name}: missing source references: {sorted(references - targets)}')
 for document in documents:
-    text = document.read_text()
+    text = document.read_text(encoding="utf-8")
     for target in (re.findall(r'\]\(([^\s)]+)\)', text)
                    + re.findall(r'href="([^"]+)"', text)):
         parsed = urlsplit(target)
