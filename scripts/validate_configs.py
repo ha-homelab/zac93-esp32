@@ -59,9 +59,9 @@ def main() -> int:
         for slug in ('wroom', 's3'):
             (work / f'adopt-{slug}.yaml').write_text(
                 f'packages:\n  project: !include adopt/esp32-{slug}.yaml\n'
-                f'api:\n  encryption:\n    key: {key}\n'
-                'wifi:\n  ssid: TEST_ONLY_NOT_A_REAL_NETWORK\n'
-                f'  password: {password}\n'
+                'api:\n  encryption:\n    key: !secret api_encryption_key\n'
+                'wifi:\n  ssid: !secret wifi_ssid\n'
+                '  password: !secret wifi_password\n'
             )
         for name in ('esp32-wroom.yaml', 'esp32-s3.yaml', 'adopt-wroom.yaml', 'adopt-s3.yaml'):
             selected_operations = operations if not name.startswith('adopt-') else ['config']
@@ -86,8 +86,8 @@ def main() -> int:
         for slug in ('wroom', 's3'):
             valid = (work / f'adopt-{slug}.yaml').read_text()
             for case, text in (
-                ('missing-key', valid.replace(f'api:\n  encryption:\n    key: {key}\n', '')),
-                ('invalid-key', valid.replace(key, 'not-a-valid-base64-key')),
+                ('missing-key', valid.replace('api:\n  encryption:\n    key: !secret api_encryption_key\n', '')),
+                ('invalid-key', valid.replace('!secret api_encryption_key', 'not-a-valid-base64-key')),
             ):
                 config = work / f'adopt-{slug}-{case}.yaml'
                 config.write_text(text)
