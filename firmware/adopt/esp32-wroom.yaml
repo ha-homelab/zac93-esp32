@@ -1,0 +1,37 @@
+# Adopt this package in ESPHome Device Builder. Its generated configuration must
+# supply a unique api.encryption.key and private Wi-Fi credentials.
+substitutions:
+  name: zac93-wroom
+  friendly_name: ZAC93 ESP32 WROOM
+  zwave_tx_pin: GPIO17
+  zwave_rx_pin: GPIO16
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.10.0
+  compile_process_limit: 2
+
+esp32:
+  board: esp32dev
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 0
+
+wifi:
+  power_save_mode: none
+
+api:
+  encryption:
+    key: REPLACE_WITH_YOUR_UNIQUE_32_BYTE_BASE64_KEY
+  reboot_timeout: 0s
+
+ota:
+  - platform: esphome
+    encryption: {}
+
+packages:
+  radio: !include ../radio.yaml

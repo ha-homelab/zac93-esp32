@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "name": "ZAC93 ESP32 USB Setup",
+  "version": "development",
+  "channel": "beta",
+  "project_url": "https://github.com/ha-homelab/zac93-esp32",
+  "profiles": [
+    {
+      "id": "wroom",
+      "label": "WROOM 4 MB — onboarding only",
+      "board": "ESP32 DevKit with ESP32-WROOM-32/32D/32E, 4 MB flash; not WROVER",
+      "chip_family": "ESP32",
+      "description": "Wi-Fi setup and Device Builder adoption only. Keep the ZAC93 disconnected until the encrypted application is installed.",
+      "provisioning": "improv",
+      "setup_url": "https://github.com/ha-homelab/zac93-esp32/blob/main/docs/browser-install.md#finish-secure-setup",
+      "parts": [{"path": "firmware/zac93-wroom.factory.bin", "offset": 0}]
+    },
+    {
+      "id": "s3",
+      "label": "S3 N8 8 MB — onboarding only",
+      "board": "ESP32-S3-DevKitC-1 N8, 8 MB flash; use the USB-to-UART connector",
+      "chip_family": "ESP32-S3",
+      "description": "Wi-Fi setup and Device Builder adoption only. Other flash sizes and pinouts need a custom build.",
+      "provisioning": "improv",
+      "setup_url": "https://github.com/ha-homelab/zac93-esp32/blob/main/docs/browser-install.md#finish-secure-setup",
+      "parts": [{"path": "firmware/zac93-s3.factory.bin", "offset": 0}]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+# Shared ZAC93 radio/application settings. UART and supply remain 3.3 V.
+uart:
+  id: zwave_uart
+  tx_pin: ${zwave_tx_pin}
+  rx_pin: ${zwave_rx_pin}
+  baud_rate: 115200
+  data_bits: 8
+  parity: NONE
+  stop_bits: 1
+  rx_buffer_size: 1024
+
+zwave_proxy:
+  id: zwave_radio
+  uart_id: zwave_uart
+
+sensor:
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 60s
+    entity_category: diagnostic
+  - platform: uptime
+    name: Uptime
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: version
+    name: ESPHome Version
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: status
+    name: ESPHome API Connected
+    entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: Restart ESP32
+    entity_category: diagnostic
+    disabled_by_default: true

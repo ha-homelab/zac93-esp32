@@ -1,0 +1,36 @@
+# USB onboarding only: no Z-Wave radio, API actions or OTA endpoint.
+substitutions:
+  release_version: development
+
+esphome:
+  name: zac93-wroom
+  friendly_name: ZAC93 ESP32 WROOM Setup
+  name_add_mac_suffix: true
+  min_version: 2026.10.0
+  compile_process_limit: 2
+  project:
+    name: ha-homelab.zac93-wroom
+    version: ${release_version}
+
+esp32:
+  board: esp32dev
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 115200
+  hardware_uart: UART0
+
+wifi:
+  power_save_mode: none
+
+# Discovery lets Device Builder offer adoption; the factory image has no radio.
+api:
+  reboot_timeout: 0s
+
+improv_serial:
+
+dashboard_import:
+  package_import_url: github://ha-homelab/zac93-esp32/firmware/adopt/esp32-wroom.yaml@${release_version}
+  import_full_config: false
