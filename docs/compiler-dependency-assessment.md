@@ -1,7 +1,9 @@
 # Compiler dependency assessment — 2026-10-16
 
-The supported command-line compiler is ESPHome 2026.9.1 with PlatformIO Core
-6.1.19 on Python 3.12. Its dependency constraints install Starlette 0.52.1,
+This historical assessment covered ESPHome 2026.9.1 with PlatformIO Core
+6.1.19 on Python 3.12. The current [compiler pin](../requirements.txt) is
+ESPHome 2026.10.0; the findings below are not a dependency report for that
+newer environment. The assessed older constraints installed Starlette 0.52.1,
 which has the following known advisories. This is not a clean whole-environment
 scan and no dependency-scanner suppression is installed.
 

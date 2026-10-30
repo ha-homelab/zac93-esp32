@@ -4,6 +4,8 @@
 
 **The target of these steps is the ESP32. Never flash an ESPHome binary to the ZAC93.** The ZAC93 retains the Zooz Serial API firmware.
 
+For a first installation without a local toolchain, use the **[browser USB setup](browser-install.md)**. The commands below remain available for custom boards and advanced configuration.
+
 ## Prepare the configuration
 
 Use a Python version supported by the pinned ESPHome release (Python 3.12 is used in CI):
@@ -22,7 +24,7 @@ Edit `firmware/secrets.yaml` locally. Put your 2.4 GHz Wi-Fi name/password in th
 
 Keep `secrets.yaml` private. The API/OTA device key and Z-Wave network security keys are **separate kinds of secret**. Firmware binaries contain configuration secrets and should not be uploaded to issues or public releases either.
 
-For an ESPHome Device Builder installation, copy `common.yaml`, the chosen board YAML and your private `secrets.yaml` into its configuration directory. Preserve the relative include, then validate and install the chosen board entry. Do not try to install `common.yaml` on its own.
+For an ESPHome Device Builder installation, copy `common.yaml`, `radio.yaml`, the chosen board YAML and your private `secrets.yaml` into its configuration directory. Preserve the relative include, then validate and install the chosen board entry. Do not try to install `common.yaml` on its own.
 
 ## Select one board
 

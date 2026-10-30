@@ -8,4 +8,4 @@ The primary maintainer personally confirmed knowledge of secure-design principle
 
 See [governance](../GOVERNANCE.md), [conduct](../CODE_OF_CONDUCT.md), [roadmap](../ROADMAP.md) and [security policy](../SECURITY.md).
 
-The [compiler dependency assessment](compiler-dependency-assessment.md) records known Starlette advisories in the pinned build environment. Its conclusion applies to Python 3.12 command-line config/compile/serial-upload usage, not PlatformIO Home or ESPHome dashboard.
+The [historical compiler dependency assessment](compiler-dependency-assessment.md) records Starlette advisories for the older compiler versions named in that document. It is not a report for the current dependency pin. Its scoped conclusion covered Python 3.12 command-line config/compile/serial-upload usage, not PlatformIO Home or ESPHome dashboard.

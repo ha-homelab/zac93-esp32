@@ -1,0 +1,189 @@
+name: Browser firmware
+
+on:
+  pull_request:
+    paths:
+      - 'firmware/**'
+      - 'scripts/build_web_firmware.py'
+      - 'scripts/validate_configs.py'
+      - 'tests/test_web_firmware.py'
+      - 'web-flasher.json'
+      - 'requirements.txt'
+      - '.github/workflows/web-firmware.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'firmware/**'
+      - 'scripts/build_web_firmware.py'
+      - 'scripts/validate_configs.py'
+      - 'tests/test_web_firmware.py'
+      - 'web-flasher.json'
+      - 'requirements.txt'
+      - '.github/workflows/web-firmware.yml'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build and optionally publish
+        required: true
+        type: string
+      channel:
+        description: Explicit installer release channel
+        required: true
+        default: beta
+        type: choice
+        options: [beta, rc, stable, nightly]
+      publish:
+        description: Attach immutable firmware assets to the existing release
+        default: false
+        type: boolean
+      deploy:
+        description: Publish the selected release's browser installer
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-firmware-${{ github.event_name }}-${{ inputs.tag || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == 'k3s') && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch))) && (vars.CI_RUNNER_LABELS || '[]') || '["ubuntu-latest"]') }}
+    timeout-minutes: 60
+    steps:
+      - name: Validate publication switches
+        if: github.event_name == 'workflow_dispatch' && inputs.deploy && !inputs.publish
+        run: |
+          echo 'Publishing the installer requires publishing the matching release assets.' >&2
+          exit 1
+      - name: Harden runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install pinned ESPHome
+        run: python -m pip install -r requirements.txt
+      - name: Check the exact selected source
+        run: |
+          python -m unittest discover -s tests -v
+          python scripts/check_publication.py
+          python scripts/check_docs.py
+      - name: Validate adoption and compile the encrypted applications
+        run: python scripts/validate_configs.py --compile
+      - name: Verify release identity and channel
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from scripts.build_web_firmware import release_version
+          tag = release_version(os.environ['RELEASE_TAG'])
+          release = json.loads(subprocess.check_output([
+              'gh', 'release', 'view', tag, '--json', 'tagName,isPrerelease,isDraft',
+          ], text=True))
+          assert release['tagName'] == tag and not release['isDraft'], 'Published release required'
+          assert release['isPrerelease'] == (os.environ['CHANNEL'] != 'stable'), 'Release/channel mismatch'
+          expected = subprocess.check_output([
+              'gh', 'api', f"repos/{os.environ['GH_REPO']}/commits/{tag}", '--jq', '.sha',
+          ], text=True).strip()
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert actual == expected, 'Tag/source mismatch'
+          PY
+      - name: Build public onboarding firmware
+        env:
+          RELEASE_TAG: ${{ inputs.tag || format('preview-{0}', github.sha) }}
+          CHANNEL: ${{ inputs.channel || 'beta' }}
+        run: |
+          python scripts/build_web_firmware.py --version "$RELEASE_TAG" --channel "$CHANNEL" --output release-web
+      - name: Check out the reviewed installer validator
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: victron-venus/venus-os-ci-toolkit
+          ref: 6f0bf114a398f9c2b7e5407042c3828a8cc28b40
+          path: _toolkit
+          persist-credentials: false
+      - name: Validate the exact release inputs before publication
+        uses: ./_toolkit/actions/esp-web-installer
+        with:
+          input-directory: release-web
+          catalog-file: web-flasher.json
+          output-directory: release-web-validated-site
+      - name: Check the generated installer's file integrity
+        working-directory: release-web-validated-site
+        run: sha256sum --check SHA256SUMS
+      - name: Save firmware for this workflow run
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: release-web/
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    needs: build
+    runs-on: ${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == 'k3s') && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch))) && (vars.CI_RUNNER_LABELS || '[]') || '["ubuntu-latest"]') }}
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Require fresh publication directories
+        env:
+          PUBLICATION_ROOT: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          test ! -e "$PUBLICATION_ROOT/inputs"
+          test ! -e "$PUBLICATION_ROOT/assets"
+          mkdir -p "$PUBLICATION_ROOT"
+      - name: Download only this run's firmware
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/inputs
+      - name: Attach to the selected existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_INPUT_DIRECTORY: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/inputs
+          RELEASE_ASSET_DIRECTORY: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/assets
+        run: |
+          gh release view "$RELEASE_TAG" --json tagName
+          mkdir "$RELEASE_ASSET_DIRECTORY"
+          cp "$RELEASE_INPUT_DIRECTORY"/firmware/*.bin \
+            "$RELEASE_INPUT_DIRECTORY"/firmware-metadata.json \
+            "$RELEASE_INPUT_DIRECTORY"/web-flasher.json \
+            "$RELEASE_INPUT_DIRECTORY"/firmware-sources.tar.gz \
+            "$RELEASE_INPUT_DIRECTORY"/FIRMWARE-SOURCES.md \
+            "$RELEASE_ASSET_DIRECTORY/"
+          (cd "$RELEASE_INPUT_DIRECTORY" && zip -r "$RELEASE_ASSET_DIRECTORY/web-installer-inputs.zip" .)
+          (cd "$RELEASE_ASSET_DIRECTORY" && sha256sum ./* > SHA256SUMS)
+          gh release upload "$RELEASE_TAG" "$RELEASE_ASSET_DIRECTORY"/*
+
+  installer:
+    if: ${{ always() && !cancelled() && needs.build.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
+    needs: [build, publish]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@6f0bf114a398f9c2b7e5407042c3828a8cc28b40
+    with:
+      toolkit-ref: 6f0bf114a398f9c2b7e5407042c3828a8cc28b40
+      artifact-name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+      deploy: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy && inputs.publish }}
