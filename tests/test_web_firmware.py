@@ -65,9 +65,10 @@ class WebFirmwareTest(unittest.TestCase):
             dist = SimpleNamespace(files=['esphome.dist-info/licenses/LICENSE'],
                                    locate_file=lambda name: work / 'installed' / name)
             with patch.object(web_build.importlib.metadata, 'distribution', return_value=dist):
-                web_build.archive_sources(work / 'sources.tar.gz', work)
+                web_build.archive_sources(work / 'sources.tar.gz', work, 'a' * 40)
             with tarfile.open(work / 'sources.tar.gz') as archive:
                 names = set(archive.getnames())
+            self.assertIn('SOURCE_REVISION', names)
             self.assertIn('esphome/core.cpp', names)
             self.assertIn('licenses/0-LICENSE', names)
             for slug in web_build.PROFILES:
@@ -82,7 +83,17 @@ class WebFirmwareTest(unittest.TestCase):
         dist = SimpleNamespace(files=[], locate_file=lambda name: Path(name))
         with patch.object(web_build.importlib.metadata, 'distribution', return_value=dist):
             with self.assertRaisesRegex(ValueError, 'license is missing'):
-                web_build.archive_sources(Path('unused.tar.gz'), Path('unused'))
+                web_build.archive_sources(Path('unused.tar.gz'), Path('unused'), 'a' * 40)
+
+    def test_source_archive_revision_without_git_checkout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'SOURCE_REVISION').write_text('a' * 40 + '\n')
+            with patch.object(web_build, 'ROOT', root):
+                self.assertEqual(web_build.source_revision(), 'a' * 40)
+                (root / 'SOURCE_REVISION').write_text('../untrusted')
+                with self.assertRaisesRegex(ValueError, 'full Git commit SHA'):
+                    web_build.source_revision()
 
     def test_version_cannot_inject_package_url(self):
         for value in ('../main', 'branch/name', 'x\nssid: bad', ''):

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import importlib.metadata
+import io
 import json
 from pathlib import Path
 import re
@@ -19,7 +20,26 @@ PROFILES = {
 }
 
 
-def archive_sources(output: Path, work: Path) -> None:
+def source_revision() -> str:
+    """Use the checkout revision, or the pinned revision in a source archive."""
+    try:
+        top = subprocess.check_output(
+            ['git', 'rev-parse', '--show-toplevel'], cwd=ROOT,
+            text=True, stderr=subprocess.DEVNULL,
+        ).strip()
+        if Path(top).resolve() != ROOT.resolve():
+            raise ValueError('Archive is nested in another checkout')
+        revision = subprocess.check_output(
+            ['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True,
+        ).strip()
+    except (subprocess.CalledProcessError, ValueError):
+        revision = (ROOT / 'SOURCE_REVISION').read_text().strip()
+    if not re.fullmatch(r'[0-9a-f]{40}', revision):
+        raise ValueError('SOURCE_REVISION must be a full Git commit SHA')
+    return revision
+
+
+def archive_sources(output: Path, work: Path, revision: str) -> None:
     """Keep generated runtime sources and their upstream notices with binaries."""
     distribution = importlib.metadata.distribution('esphome')
     package = Path(distribution.locate_file('esphome'))
@@ -48,6 +68,11 @@ def archive_sources(output: Path, work: Path) -> None:
     roots.extend((ROOT / p, p) for p in public_files)
     total = 0
     with tarfile.open(output, 'w:gz') as archive:
+        revision_data = (revision + '\n').encode('ascii')
+        info = tarfile.TarInfo('SOURCE_REVISION')
+        info.size = len(revision_data)
+        info.mode = 0o644
+        archive.addfile(info, io.BytesIO(revision_data))
         for base, prefix in roots:
             candidates = sorted(base.rglob('*')) if base.is_dir() else [base]
             for path in candidates:
@@ -92,6 +117,7 @@ def main() -> int:
     catalog['release_url'] = f'https://github.com/ha-homelab/zac93-esp32/releases/tag/{args.version}'
     for profile in catalog['profiles']:
         profile['setup_url'] = f'https://github.com/ha-homelab/zac93-esp32/blob/{args.version}/docs/browser-install.md#finish-secure-setup'
+    revision = source_revision()
     records = []
     with tempfile.TemporaryDirectory(prefix='zac93-factory-') as directory:
         work = Path(directory)
@@ -128,14 +154,12 @@ def main() -> int:
             profile['parts'][0]['sha256'] = record['sha256']
         (args.output / 'web-flasher.json').write_text(json.dumps(catalog, indent=2) + '\n')
         (args.output / 'firmware-metadata.json').write_text(json.dumps({
-            'source_commit': subprocess.check_output(
-                ['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True,
-            ).strip(),
+            'source_commit': revision,
             'version': args.version, 'purpose': 'USB onboarding only; no radio or OTA',
             'esphome_requirement': (ROOT / 'requirements.txt').read_text().strip(),
             'images': records,
         }, indent=2) + '\n')
-        archive_sources(args.output / 'firmware-sources.tar.gz', work)
+        archive_sources(args.output / 'firmware-sources.tar.gz', work, revision)
         (args.output / 'FIRMWARE-SOURCES.md').write_text(
             '# Firmware source and licenses\n\n'
             'The configuration and project scripts retain the repository MIT license. '
@@ -146,6 +170,7 @@ def main() -> int:
             'their dependency versions are recorded in the generated project manifests.\n\n'
             'Install the pinned requirements.txt, then rebuild with python scripts/build_web_firmware.py '
             f'--version {args.version} --channel {args.channel} --output NEW_DIRECTORY. '
+            'SOURCE_REVISION records the original Git commit when rebuilding outside a checkout. '
             'The normal ESPHome toolchain fetches its pinned ESP-IDF dependencies. '
             'This package preserves corresponding sources; it does not promise bit-for-bit reproduction. '
             'No signed boot restriction is added by this project.\n'
