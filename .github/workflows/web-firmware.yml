@@ -143,23 +143,37 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Require fresh publication directories
+        env:
+          PUBLICATION_ROOT: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          test ! -e "$PUBLICATION_ROOT/inputs"
+          test ! -e "$PUBLICATION_ROOT/assets"
+          mkdir -p "$PUBLICATION_ROOT"
       - name: Download only this run's firmware
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
-          path: release-web
+          path: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/inputs
       - name: Attach to the selected existing release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_INPUT_DIRECTORY: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/inputs
+          RELEASE_ASSET_DIRECTORY: ${{ runner.temp }}/zac93-publish-${{ github.run_id }}-${{ github.run_attempt }}/assets
         run: |
           gh release view "$RELEASE_TAG" --json tagName
-          mkdir release-assets
-          cp release-web/firmware/*.bin release-web/firmware-metadata.json release-web/web-flasher.json release-web/firmware-sources.tar.gz release-web/FIRMWARE-SOURCES.md release-assets/
-          (cd release-web && zip -r ../release-assets/web-installer-inputs.zip .)
-          (cd release-assets && sha256sum ./* > SHA256SUMS)
-          gh release upload "$RELEASE_TAG" release-assets/*
+          mkdir "$RELEASE_ASSET_DIRECTORY"
+          cp "$RELEASE_INPUT_DIRECTORY"/firmware/*.bin \
+            "$RELEASE_INPUT_DIRECTORY"/firmware-metadata.json \
+            "$RELEASE_INPUT_DIRECTORY"/web-flasher.json \
+            "$RELEASE_INPUT_DIRECTORY"/firmware-sources.tar.gz \
+            "$RELEASE_INPUT_DIRECTORY"/FIRMWARE-SOURCES.md \
+            "$RELEASE_ASSET_DIRECTORY/"
+          (cd "$RELEASE_INPUT_DIRECTORY" && zip -r "$RELEASE_ASSET_DIRECTORY/web-installer-inputs.zip" .)
+          (cd "$RELEASE_ASSET_DIRECTORY" && sha256sum ./* > SHA256SUMS)
+          gh release upload "$RELEASE_TAG" "$RELEASE_ASSET_DIRECTORY"/*
 
   installer:
     if: ${{ always() && !cancelled() && needs.build.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
