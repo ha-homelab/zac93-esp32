@@ -115,7 +115,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: victron-venus/venus-os-ci-toolkit
-          ref: 447e7def42caf6684d82f45a7102f4e23f2de93b
+          ref: d1144d070b769fbbfffe1d57546adb0b495515f0
           path: _toolkit
           persist-credentials: false
       - name: Validate the exact release inputs before publication
@@ -168,8 +168,8 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@447e7def42caf6684d82f45a7102f4e23f2de93b
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@d1144d070b769fbbfffe1d57546adb0b495515f0
     with:
-      toolkit-ref: 447e7def42caf6684d82f45a7102f4e23f2de93b
+      toolkit-ref: d1144d070b769fbbfffe1d57546adb0b495515f0
       artifact-name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
       deploy: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy && inputs.publish }}
