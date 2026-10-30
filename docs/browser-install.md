@@ -145,3 +145,35 @@ notices and generated factory source. ESPHome runtime code retains GPLv3 and
 its Python tooling retains MIT; ESP-IDF components retain their own licenses.
 Only the temporary public factory builds enter this archive. Personal Device
 Builder YAML, keys and application binaries must remain private.
+
+## Maintainer: publish a browser firmware release
+
+1. Merge the firmware changes and wait for the full **Check** and **Browser
+   firmware** workflows to pass. The latter compiles both application profiles,
+   builds both public factory images, and runs the shared installer validator
+   before any release asset can be uploaded. It checks chip IDs, flash layout,
+   catalog paths and hashes against the exact same firmware input directory.
+2. Create a published, non-draft GitHub release whose tag points to that reviewed
+   source. Use a prerelease for `beta`, `rc` or `nightly`; use a regular release
+   for `stable`. An older source-only tag without the browser firmware files
+   cannot be used. GitHub Pages must already be configured for Actions.
+3. Run **Actions → Browser firmware → Run workflow** from the default branch.
+   Enter the existing `tag` and matching `channel`. Leave `publish` and `deploy`
+   off for a rehearsal, then inspect the workflow's installer artifact. These
+   switches are off by default; a beta cannot automatically replace the public
+   installer.
+4. To publish that reviewed release, dispatch again with `publish: true` and
+   `deploy: true`. The workflow rebuilds and validates the tagged source,
+   attaches firmware/source/license/checksum assets, and publishes the page.
+   Enabling `deploy` requires `publish`; merely creating a GitHub release does
+   not run this workflow.
+5. Verify the live page's version, channel and both board profiles, its manifest
+   and binary URLs, and the release asset checksums. A successful build or page
+   deployment does not replace a physical board acceptance test.
+
+Release assets are immutable: the upload intentionally does not use
+`--clobber`. If an asset already exists or publication was only partially
+successful, inspect the failed run and the existing release before retrying;
+do not overwrite previously published firmware. Changed firmware needs a new
+release tag. The visible page contains one explicitly published channel at a
+time, so replacing a stable page with a prerelease must be a deliberate choice.

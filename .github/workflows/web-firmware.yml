@@ -111,6 +111,22 @@ jobs:
           CHANNEL: ${{ inputs.channel || 'beta' }}
         run: |
           python scripts/build_web_firmware.py --version "$RELEASE_TAG" --channel "$CHANNEL" --output release-web
+      - name: Check out the reviewed installer validator
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: victron-venus/venus-os-ci-toolkit
+          ref: 447e7def42caf6684d82f45a7102f4e23f2de93b
+          path: _toolkit
+          persist-credentials: false
+      - name: Validate the exact release inputs before publication
+        uses: ./_toolkit/actions/esp-web-installer
+        with:
+          input-directory: release-web
+          catalog-file: web-flasher.json
+          output-directory: release-web-validated-site
+      - name: Check the generated installer's file integrity
+        working-directory: release-web-validated-site
+        run: sha256sum --check SHA256SUMS
       - name: Save firmware for this workflow run
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
