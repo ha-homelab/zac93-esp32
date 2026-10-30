@@ -54,6 +54,10 @@ class WebFirmwareTest(unittest.TestCase):
             license_path = work / 'installed' / 'esphome.dist-info' / 'licenses' / 'LICENSE'
             license_path.parent.mkdir(parents=True)
             license_path.write_text('Runtime license notice')
+            dependency = work / '.esphome/pio_components/idf/fixture/improv/Improv'
+            dependency.mkdir(parents=True)
+            (dependency / 'improv.h').write_text('// dependency source')
+            (dependency / 'LICENSE').write_text('Dependency license notice')
             for slug in web_build.PROFILES:
                 project = work / '.esphome' / 'build' / f'zac93-{slug}'
                 (project / 'src').mkdir(parents=True)
@@ -68,6 +72,8 @@ class WebFirmwareTest(unittest.TestCase):
                 web_build.archive_sources(work / 'sources.tar.gz', work, 'a' * 40)
             with tarfile.open(work / 'sources.tar.gz') as archive:
                 names = set(archive.getnames())
+            self.assertIn('generated/pio_components/idf/fixture/improv/Improv/improv.h', names)
+            self.assertIn('generated/pio_components/idf/fixture/improv/Improv/LICENSE', names)
             self.assertIn('SOURCE_REVISION', names)
             self.assertIn('esphome/core.cpp', names)
             self.assertIn('licenses/0-LICENSE', names)

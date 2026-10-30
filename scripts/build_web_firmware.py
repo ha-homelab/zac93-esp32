@@ -44,11 +44,18 @@ def archive_sources(output: Path, work: Path, revision: str) -> None:
     distribution = importlib.metadata.distribution('esphome')
     package = Path(distribution.locate_file('esphome'))
     roots = [(package, 'esphome')]
+    # Native ESP-IDF conversions (including Improv) are stored next to,
+    # rather than inside, the per-board build directories. This is still
+    # the dedicated public factory temporary directory.
+    libraries = work / '.esphome' / 'pio_components'
     licenses = [Path(distribution.locate_file(f)) for f in distribution.files or []
                 if 'license' in Path(str(f)).name.lower() and '.dist-info/' in str(f)]
     if not licenses:
         raise ValueError('ESPHome distribution license is missing')
     roots.extend((p, f'licenses/{i}-{p.name}') for i, p in enumerate(licenses))
+    if not libraries.is_dir():
+        raise ValueError('Public factory dependency source directory is missing')
+    roots.append((libraries, 'generated/pio_components'))
     for slug in PROFILES:
         project = work / '.esphome' / 'build' / f'zac93-{slug}'
         for path in project.iterdir():
@@ -165,7 +172,7 @@ def main() -> int:
             'The configuration and project scripts retain the repository MIT license. '
             'ESPHome C++ runtime is GPLv3; its Python tooling is MIT. '
             'The matching ESPHome package, license notices, generated runtime source, '
-            'project manifests and public factory configurations are in firmware-sources.tar.gz. '
+            'project manifests, converted library sources and public factory configurations are in firmware-sources.tar.gz. '
             'ESP-IDF and its bundled components retain their upstream licenses; '
             'their dependency versions are recorded in the generated project manifests.\n\n'
             'Install the pinned requirements.txt, then rebuild with python scripts/build_web_firmware.py '

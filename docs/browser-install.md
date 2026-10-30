@@ -31,7 +31,8 @@ through setup; its firmware and Z-Wave network are not part of this installer.
    Linux. Other browsers work only if they provide Web Serial; an unsupported
    browser shows an explanation instead of a functioning Connect button.
    iPhone/iPad browsers do not provide this USB installation path.
-3. Select the exact board profile and release channel, then choose **Connect**.
+3. Verify the displayed release version and channel, select the exact board
+   profile, then choose **Connect**.
    In the browser's permission dialog select only this board's serial port.
 4. Choose **Install**. Read the erase warning: reinstalling can remove settings
    on that ESP32. Do not use this onboarding image as an update for a working
@@ -48,12 +49,24 @@ through setup; its firmware and Z-Wave network are not part of this installer.
    `zac93-wroom-…` or `zac93-s3-…` board should appear as a discovered device.
    Choose **Adopt/Take control**. The exact label can vary with Device Builder.
    Its import points to the matching release's application template.
-2. Keep the unique `api.encryption.key` generated for this device and your
-   private Wi-Fi configuration. Do not paste a key from an example or another
-   board. The template enables encrypted ESPHome OTA using this same key.
-   If your builder does not generate the key, generate one in its configuration
-   editor using the [ESPHome API guide](https://esphome.io/components/api/), then
-   validate the configuration before proceeding.
+2. Open the imported YAML and ensure it has a unique `api.encryption.key`
+   for this device, together with your private Wi-Fi configuration. Do not
+   assume adoption generated a key: ESPHome's importer can leave it unset.
+   If it is absent, use **Copy/Regenerate** in the
+   [ESPHome API guide](https://esphome.io/components/api/#configuration-variables)
+   to generate a new 32-byte Base64 key in your browser, then add it to the
+   imported YAML in Device Builder:
+
+   ```yaml
+   api:
+     encryption:
+       key: "PASTE_NEW_PER_DEVICE_KEY_HERE"
+   ```
+
+   Replace the placeholder with that new key; never reuse another board's key.
+   The application template deliberately fails validation until a valid key
+   overrides its placeholder. It uses the same key for encrypted ESPHome OTA.
+   Validate the configuration before proceeding and keep the key private.
 3. Choose **Install → Manual download → Factory format** (called **Modern format**
    in older versions; the complete factory
    image), then open [ESPHome Web](https://web.esphome.io/), connect to this
@@ -112,7 +125,7 @@ obtain a newer release. The Zooz radio remains a separate update target.
 
 ## What a release contains
 
-Public releases supply `zac93-wroom.factory.bin` and `zac93-s3.factory.bin`,
+Browser firmware releases supply `zac93-wroom.factory.bin` and `zac93-s3.factory.bin`,
 `SHA256SUMS`, `firmware-metadata.json` and the installer catalog. These are built
 only from `firmware/factory/`; the build rejects secret references, OTA endpoints
 and Z-Wave components there. CI checks both factory configurations and the
