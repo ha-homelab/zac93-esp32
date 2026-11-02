@@ -3,6 +3,7 @@ import argparse
 import importlib.util
 import json
 from pathlib import Path
+import re
 import unittest
 from unittest.mock import patch
 import tarfile
@@ -16,6 +17,14 @@ spec.loader.exec_module(web_build)
 
 
 class WebFirmwareTest(unittest.TestCase):
+    def test_installer_checks_out_its_reviewed_workflow_revision(self):
+        workflow = (ROOT / '.github/workflows/web-firmware.yml').read_text()
+        revision = re.search(r'esp-web-installer\.yml@([0-9a-f]{40})', workflow)
+        checkout = re.search(r'toolkit-ref: ([0-9a-f]{40})', workflow)
+        self.assertIsNotNone(revision)
+        self.assertIsNotNone(checkout)
+        self.assertEqual(revision[1], checkout[1])
+
     def test_factory_images_are_only_provisioning(self):
         for slug in web_build.PROFILES:
             text = (ROOT / f'firmware/factory/esp32-{slug}.yaml').read_text()
