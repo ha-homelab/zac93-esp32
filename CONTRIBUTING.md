@@ -35,3 +35,25 @@ pull-request merge. Do not disable checks to obtain a green result.
 ## Project participation
 
 Use public GitHub issues and pull requests for questions, proposals and reproducible non-sensitive bugs. English is the shared discussion language. Read [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md) and the [roadmap](ROADMAP.md). All major functionality changes require automated regression coverage, including relevant negative cases, and updated interface documentation. Resolve review findings and required CI failures before normal merge. Original contributions are accepted under the repository MIT license; preserve third-party licensing and attribution.
+
+## Verified Python tooling
+
+`requirements.txt` remains the ESPHome version input. `requirements.lock`
+contains its complete artifact hashes; `requirements-ci.in` adds only the existing
+Ruff version, constrained by that closure without duplicating it. CI installs both
+locks in one verified invocation. `requirements-build.lock`
+provides the verified setuptools backend for the three source-only packages
+crcmod, esptool and paho-mqtt. Both workflows disable isolated backend downloads
+and permit source builds only for those packages; all other dependencies require
+binary wheels. The Python version and ESPHome version are unchanged.
+
+Regenerate with uv 0.13.4, then run all unit tests and both firmware builds:
+
+```sh
+uv pip compile requirements.txt --python-version 3.12 --universal --generate-hashes --no-annotate --output-file requirements.lock
+uv pip compile requirements-ci.in --constraint requirements.lock --python-version 3.12 --universal --generate-hashes --no-annotate --output-file requirements-ci.lock
+uv pip compile requirements-build.in --python-version 3.12 --universal --generate-hashes --only-binary=:all: --no-annotate --output-file requirements-build.lock
+```
+
+The dependency tests reject stale direct pins or divergence between CI and
+firmware locks. Lockfile changes also trigger the browser-firmware workflow.
