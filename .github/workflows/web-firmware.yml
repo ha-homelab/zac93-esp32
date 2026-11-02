@@ -9,6 +9,8 @@ on:
       - 'tests/test_web_firmware.py'
       - 'web-flasher.json'
       - 'requirements.txt'
+      - 'requirements*.lock'
+      - 'requirements*.in'
       - '.github/workflows/web-firmware.yml'
   push:
     branches: [main]
@@ -19,6 +21,8 @@ on:
       - 'tests/test_web_firmware.py'
       - 'web-flasher.json'
       - 'requirements.txt'
+      - 'requirements*.lock'
+      - 'requirements*.in'
       - '.github/workflows/web-firmware.yml'
   workflow_dispatch:
     inputs:
@@ -72,9 +76,13 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.lock
+            requirements-build.lock
       - name: Install pinned ESPHome
-        run: python -m pip install -r requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r requirements-build.lock
+          python -m pip install --require-hashes --no-build-isolation --only-binary=:all: --no-binary=crcmod,esptool,paho-mqtt -r requirements.lock
       - name: Check the exact selected source
         run: |
           python -m unittest discover -s tests -v

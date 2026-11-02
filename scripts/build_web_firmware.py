@@ -64,7 +64,8 @@ def archive_sources(output: Path, work: Path, revision: str) -> None:
     # Enumerate public source files: never walk the primary checkout, which may
     # contain ignored personal YAML or firmware.
     public_files = [
-        'requirements.txt', 'scripts/build_web_firmware.py', 'scripts/validate_configs.py',
+        'requirements.txt', 'requirements.lock', 'requirements-build.in',
+        'requirements-build.lock', 'scripts/build_web_firmware.py', 'scripts/validate_configs.py',
         'LICENSE', 'README.md', 'web-flasher.json', 'docs/browser-install.md',
         'firmware/common.yaml', 'firmware/radio.yaml', 'firmware/secrets.example.yaml',
     ]
@@ -175,7 +176,9 @@ def main() -> int:
             'project manifests, converted library sources and public factory configurations are in firmware-sources.tar.gz. '
             'ESP-IDF and its bundled components retain their upstream licenses; '
             'their dependency versions are recorded in the generated project manifests.\n\n'
-            'Install the pinned requirements.txt, then rebuild with python scripts/build_web_firmware.py '
+            'Install requirements-build.lock with pip --require-hashes --only-binary=:all:, then '
+            'requirements.lock with pip --require-hashes --no-build-isolation --only-binary=:all: '
+            '--no-binary=crcmod,esptool,paho-mqtt. Rebuild with python scripts/build_web_firmware.py '
             f'--version {args.version} --channel {args.channel} --output NEW_DIRECTORY. '
             'SOURCE_REVISION records the original Git commit when rebuilding outside a checkout. '
             'The normal ESPHome toolchain fetches its pinned ESP-IDF dependencies. '

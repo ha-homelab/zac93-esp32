@@ -90,7 +90,8 @@ class WebFirmwareTest(unittest.TestCase):
                 self.assertIn(f'firmware/factory/esp32-{slug}.yaml', names)
                 self.assertIn(f'firmware/adopt/esp32-{slug}.yaml', names)
                 self.assertIn(f'generated/{slug}/src/main.cpp', names)
-            for name in ('web-flasher.json', 'firmware/radio.yaml', 'scripts/build_web_firmware.py', 'requirements.txt'):
+            for name in ('web-flasher.json', 'firmware/radio.yaml', 'scripts/build_web_firmware.py', 'requirements.txt',
+                         'requirements.lock', 'requirements-build.in', 'requirements-build.lock'):
                 self.assertIn(name, names)
             self.assertFalse(any(name.endswith('.bin') or '.pioenvs' in name for name in names))
 
