@@ -39,8 +39,9 @@ Use public GitHub issues and pull requests for questions, proposals and reproduc
 ## Verified Python tooling
 
 `requirements.txt` remains the ESPHome version input. `requirements.lock`
-contains its complete artifact hashes; `requirements-ci.in` adds the existing
-Ruff version, resolved against that same closure. `requirements-build.lock`
+contains its complete artifact hashes; `requirements-ci.in` adds only the existing
+Ruff version, constrained by that closure without duplicating it. CI installs both
+locks in one verified invocation. `requirements-build.lock`
 provides the verified setuptools backend for the three source-only packages
 crcmod, esptool and paho-mqtt. Both workflows disable isolated backend downloads
 and permit source builds only for those packages; all other dependencies require

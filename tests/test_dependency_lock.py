@@ -35,10 +35,13 @@ class DependencyLockTests(unittest.TestCase):
             self.assertTrue(direct)
             self.assertEqual(direct, {name: locked.get(name) for name in direct})
 
-    def test_ci_preserves_firmware_dependencies(self):
+    def test_ci_does_not_override_firmware_dependencies(self):
         firmware = marked_pins((ROOT / "requirements.lock").read_text())
         ci = marked_pins((ROOT / "requirements-ci.lock").read_text())
-        self.assertEqual(firmware, {key: ci.get(key) for key in firmware})
+        self.assertEqual({key: firmware[key] for key in firmware.keys() & ci.keys()},
+                         {key: ci[key] for key in firmware.keys() & ci.keys()})
+        self.assertIn("-r requirements.lock -r requirements-ci.lock",
+                      (ROOT / ".github/workflows/check.yml").read_text())
 
     def test_every_dependency_has_artifact_hashes(self):
         for name in ["requirements.lock", "requirements-ci.lock", "requirements-build.lock"]:
