@@ -50,8 +50,8 @@ binary wheels. The Python version and ESPHome version are unchanged.
 Regenerate with uv 0.13.4, then run all unit tests and both firmware builds:
 
 ```sh
-uv pip compile requirements.txt --python-version 3.12 --universal --generate-hashes --no-annotate --output-file requirements.lock
-uv pip compile requirements-ci.in --constraint requirements.lock --python-version 3.12 --universal --generate-hashes --no-annotate --output-file requirements-ci.lock
+uv pip compile requirements.txt --python-version=3.12 --universal --generate-hashes --output-file=requirements.lock
+uv pip compile requirements-ci.in --constraint=requirements.lock --python-version=3.12 --universal --generate-hashes --output-file=requirements-ci.lock
 uv pip compile requirements-build.in --python-version 3.12 --universal --generate-hashes --only-binary=:all: --no-annotate --output-file requirements-build.lock
 ```
 
