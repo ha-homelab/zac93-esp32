@@ -15,8 +15,7 @@
     "**/node_modules/**",
     "**/fixtures/**",
     "**/tools/browser-compatibility/**",
-    ".github/cosign/**",
-    "requirements-build.lock"
+    ".github/cosign/**"
   ],
   "packageRules": [
     {
@@ -37,20 +36,13 @@
         "pip_requirements"
       ],
       "matchFileNames": [
+        ".github/requirements-wheels-only.in",
+        "requirements-build.in",
+        "requirements-build.lock",
         "requirements-ci.in",
         "requirements-ci.lock",
         "requirements.lock",
         "requirements.txt"
-      ],
-      "enabled": false
-    },
-    {
-      "description": "These generated locks use compile flags unsupported by the pinned Renovate parser; regenerate them through the documented source workflow.",
-      "matchManagers": [
-        "pip_requirements"
-      ],
-      "matchFileNames": [
-        "requirements-build.lock"
       ],
       "enabled": false
     }
@@ -65,6 +57,8 @@
       "**/fixtures/**",
       "**/tools/browser-compatibility/**",
       ".github/cosign/**",
+      ".github/requirements-wheels-only.in",
+      "requirements-build.in",
       "requirements-build.lock",
       "requirements-ci.in",
       "requirements-ci.lock",
@@ -74,6 +68,7 @@
   },
   "pip-compile": {
     "managerFilePatterns": [
+      "/^requirements\\-build\\.lock$/",
       "/^requirements\\-ci\\.lock$/",
       "/^requirements\\.lock$/"
     ]
