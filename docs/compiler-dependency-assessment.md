@@ -42,3 +42,24 @@ HTTP service. Reassess these advisories when any of those assumptions changes.
 Retain the compiler constraints until an upstream-supported dependency update
 has been validated; replacing Starlette with a version outside PlatformIO's
 constraints without testing is not an established remediation.
+
+## Source-build dependency update boundary
+
+The Renovate runner forbids package build-backend execution. The following inputs
+and generated locks must therefore be reviewed and regenerated together in the
+existing controlled build environment; this also applies to security updates.
+GitHub vulnerability alerts remain enabled. Independent build, test and CI
+dependencies retain their configured automatic update paths.
+
+- `requirements.txt` and `requirements.lock`: the pinned ESPHome compiler requires esptool 5.4.0 without a usable wheel.
+
+Use the existing regeneration command for each pair, then run its current CI
+validation before accepting the source and lock together:
+
+```sh
+uv pip compile requirements.txt --python-version=3.12 --universal --generate-hashes --output-file=requirements.lock
+```
+
+Do not make the shared update runner execute source builds to bypass this
+boundary. Requalify native ownership only when the complete pinned dependency
+closure can be resolved without build-backend execution.
