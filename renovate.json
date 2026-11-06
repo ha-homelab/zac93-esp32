@@ -15,7 +15,9 @@
     "**/node_modules/**",
     "**/fixtures/**",
     "**/tools/browser-compatibility/**",
-    ".github/cosign/**"
+    ".github/cosign/**",
+    "requirements.txt",
+    "requirements.lock"
   ],
   "packageRules": [
     {
@@ -69,8 +71,10 @@
   "pip-compile": {
     "managerFilePatterns": [
       "/^requirements\\-build\\.lock$/",
-      "/^requirements\\-ci\\.lock$/",
-      "/^requirements\\.lock$/"
+      "/^requirements\\-ci\\.lock$/"
     ]
-  }
+  },
+  "description": [
+    "Source-build dependency inputs and their generated locks are maintained together through the documented reviewed environment. Other native and CI updates remain automated."
+  ]
 }
