@@ -63,7 +63,7 @@ jobs:
           echo 'Publishing the installer requires publishing the matching release assets.' >&2
           exit 1
       - name: Harden runner
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
         with:
           egress-policy: audit
       - name: Check out exact source
@@ -190,8 +190,8 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@f77820983e4279471224b8443980f55448183872 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@77b0157695fb80e4d97c3ac4819c2d1db7ba96c7 # main
     with:
-      toolkit-ref: f77820983e4279471224b8443980f55448183872
+      toolkit-ref: 77b0157695fb80e4d97c3ac4819c2d1db7ba96c7
       artifact-name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
       deploy: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy && inputs.publish }}
