@@ -190,8 +190,8 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@d4b21d156067ce58f89f89149bfad545e1889ae7 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/esp-web-installer.yml@8249b82b506af2e62c03e33ce0990327dd5f55c6 # main
     with:
-      toolkit-ref: d4b21d156067ce58f89f89149bfad545e1889ae7
+      toolkit-ref: 8249b82b506af2e62c03e33ce0990327dd5f55c6
       artifact-name: web-firmware-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
       deploy: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy && inputs.publish }}
